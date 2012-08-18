@@ -260,6 +260,7 @@ You or the server may be running older versions of the game. Press the auto-upda
 #define GAMENAME_STRING     "wolfmp"
 #else
 // the demo uses a different protocol version for independant browsing
+#define GAMENAME_STRING     "wolfmp"
   #define   PROTOCOL_VERSION    50  // NERVE - SMF - wolfMP protocol version
 #endif
 
