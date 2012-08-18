@@ -28,7 +28,7 @@
 
 #include <sndio.h>
 
-#include "../qcommon/q_shared.h"
+#include "../game/q_shared.h"
 #include "../client/snd_local.h"
 
 static struct sio_hdl *hdl;

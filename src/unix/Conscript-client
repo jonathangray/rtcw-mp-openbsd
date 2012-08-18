@@ -151,7 +151,7 @@ if ($OS eq 'OpenBSD') {
 	  . $BUILD_DIR . '/unix/jpeglib.a '
 	  . $BUILD_DIR . '/unix/asmlib.a '
 	  . $BUILD_DIR . '/unix/inlinelib.a '
-	  . '-L/usr/X11R6/lib -lX11 -lXext -lXxf86dga -lXxf86vm -lm -lossaudio'
+	  . '-L/usr/X11R6/lib -lX11 -lXext -lXxf86dga -lXxf86vm -lm -lsndio'
 	);
 } else {
 	$env = new cons(
@@ -245,7 +245,7 @@ if ($OS eq 'OpenBSD') {
 	  ../unix/linux_common.c
 	  ../unix/linux_qgl.c   
 	  ../unix/linux_glimp.c   
-	  ../unix/linux_snd.c
+	  ../unix/sndio_snd.c
 		../unix/linux_signals.c
 	  );
 } else {
