@@ -1172,7 +1172,7 @@ extern huffman_t clientHuffTables;
 #define SYS_DLLNAME_UI_SHIFT 5
 #define SYS_DLLNAME_UI "zndrud}=;3iqq"
 
-#elif defined( __linux__ )
+#elif defined( __unix__ ) && !defined( __MACOS__ )
 
 // qagame.mp.i386.so
 #define SYS_DLLNAME_QAGAME_SHIFT 6

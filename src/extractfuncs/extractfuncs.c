@@ -348,7 +348,7 @@ void AddFunctionName( char *funcname, char *filename, tokenList_t *head ) {
 		return;
 	}
 
-#if defined( __linux__ )
+#if defined( __unix__ ) && !defined( __MACOS__ )
 	// the bad thing is, this doesn't preprocess .. on __linux__ this
 	// function is not implemented (q_math.c)
 	if ( !Q_stricmp( funcname, "BoxOnPlaneSide" ) ) {
@@ -358,7 +358,7 @@ void AddFunctionName( char *funcname, char *filename, tokenList_t *head ) {
 
 	// NERVE - SMF - workaround for Graeme's predifined MACOSX functions
 	// TTimo - looks like linux version needs to escape those too
-#if defined( _WIN32 ) || defined( __linux__ )
+#if defined( _WIN32 ) || ( defined( __unix__ ) && !defined( __MACOS__ ) )
 	if ( !Q_stricmp( funcname, "qmax" ) ) {
 		return;
 	} else if ( !Q_stricmp( funcname, "qmin" ) ) {

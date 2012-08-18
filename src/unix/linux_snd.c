@@ -40,6 +40,9 @@ If you have questions concerning this license or the applicable additional terms
 #ifdef __FreeBSD__ // rb0101023 - added
 #include <sys/soundcard.h>
 #endif
+#ifdef __OpenBSD__
+#include <soundcard.h>
+#endif
 #include <stdio.h>
 
 #include "../game/q_shared.h"
@@ -58,6 +61,7 @@ cvar_t *snddevice;
 static int tryrates[] = { 22050, 11025, 44100, 48000, 8000 };
 
 static qboolean use_custom_memset = qfalse;
+#ifdef __linux__
 // show_bug.cgi?id=371
 void Snd_Memset( void* dest, const int val, const size_t count ) {
 	int *pDest;
@@ -74,6 +78,7 @@ void Snd_Memset( void* dest, const int val, const size_t count ) {
 		pDest[i] = val;
 	}
 }
+#endif
 
 qboolean SNDDMA_Init( void ) {
 	int rc;

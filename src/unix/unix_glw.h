@@ -26,7 +26,7 @@ If you have questions concerning this license or the applicable additional terms
 ===========================================================================
 */
 
-#if !( defined __linux__ || defined __FreeBSD__ )
+#if !( defined __unix__  && !defined __MACOS__ )
 #error You should include this file only on Linux/FreeBSD platforms
 #endif
 

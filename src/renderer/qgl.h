@@ -52,19 +52,11 @@ If you have questions concerning this license or the applicable additional terms
 
 #include "macosx_glimp.h"
 
-#elif defined( __linux__ )
+#elif defined( __unix__ )
 
 #include <GL/gl.h>
 #include <GL/glx.h>
 // bk001129 - from cvs1.17 (mkv)
-#if defined( __FX__ )
-#include <GL/fxmesa.h>
-#endif
-
-#elif defined( __FreeBSD__ ) // rb010123
-
-#include <GL/gl.h>
-#include <GL/glx.h>
 #if defined( __FX__ )
 #include <GL/fxmesa.h>
 #endif
@@ -210,7 +202,7 @@ extern void ( APIENTRY * qglPNTrianglesfATI )( GLenum pname, GLfloat param );
 //===========================================================================
 
 // non-windows systems will just redefine qgl* to gl*
-#if !defined( _WIN32 ) && !defined( MACOS_X ) && !defined( __linux__ ) && !defined( __FreeBSD__ ) // rb010123
+#if !defined( _WIN32 ) && !defined( __unix__ ) // rb010123
 
 #include "qgl_linked.h"
 
@@ -597,7 +589,7 @@ extern BOOL ( WINAPI * qwglSwapIntervalEXT )( int interval );
 
 #endif  // _WIN32
 
-#if ( ( defined __linux__ )  || ( defined __FreeBSD__ ) ) // rb010123
+#if defined __unix__ && !defined( __MACOS__ ) // rb010123
 
 //FX Mesa Functions
 // bk001129 - from cvs1.17 (mkv)
@@ -618,8 +610,8 @@ extern Bool ( *qglXMakeCurrent )( Display *dpy, GLXDrawable drawable, GLXContext
 extern void ( *qglXCopyContext )( Display *dpy, GLXContext src, GLXContext dst, GLuint mask );
 extern void ( *qglXSwapBuffers )( Display *dpy, GLXDrawable drawable );
 
-#endif // __linux__ || __FreeBSD__ // rb010123
+#endif // __unix__ // rb010123
 
-#endif  // _WIN32 && __linux__
+#endif  // _WIN32 && __unix__
 
 #endif

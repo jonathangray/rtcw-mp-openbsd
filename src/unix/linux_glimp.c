@@ -1663,7 +1663,7 @@ void Sys_SendKeyEvents( void ) {
 // bk010216 - added stubs for non-Linux UNIXes here
 // FIXME - use NO_JOYSTICK or something else generic
 
-#if defined( __FreeBSD__ ) // rb010123
+#if !defined( __linux__ ) // rb010123
 void IN_StartupJoystick( void ) {}
 void IN_JoyMove( void ) {}
 #endif

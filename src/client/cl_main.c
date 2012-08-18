@@ -2727,7 +2727,7 @@ void CL_ClientDamageCommand( void ) {
 
 // NERVE - SMF
 void CL_startSingleplayer_f( void ) {
-#if defined( __linux__ )
+#if defined( __unix__ )
 	Sys_StartProcess( "./wolfsp.x86", qtrue );
 #else
 	Sys_StartProcess( "WolfSP.exe", qtrue );

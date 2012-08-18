@@ -1,6 +1,6 @@
 # dedicated server build script
 
-Import qw( BASE_CFLAGS CONFIG_DIR BUILD_DIR DEDICATED_NAME CC CXX LINK );
+Import qw( BASE_CFLAGS CONFIG_DIR BUILD_DIR DEDICATED_NAME CC CXX LINK OS );
 
 $env_botlib = new cons(
 	CC => $CC,
@@ -54,17 +54,31 @@ $nasm_env = new cons(%nasm_hash);
 
 Library $nasm_env 'asmlib', 'ftol.nasm', 'snapvector.nasm';
 
-$env = new cons(
-	CC => $CC,
-	CXX => $CXX,
-	LINK => $LINK,
-  # FIXME TTimo I'm not sure about what C_ONLY is for
-  CFLAGS => $BASE_CFLAGS . '-DDEDICATED -DC_ONLY',
-  LDFLAGS => '-ldl -lm',
-  LIBS => ' ' 
-  . $BUILD_DIR . '/unix/botlib.a '
-  . $BUILD_DIR . '/unix/asmlib.a'
-);
+if ($OS eq 'OpenBSD') {
+	$env = new cons(
+		CC => $CC,
+		CXX => $CXX,
+		LINK => $LINK,
+	  # FIXME TTimo I'm not sure about what C_ONLY is for
+	  CFLAGS => $BASE_CFLAGS . '-DDEDICATED -DC_ONLY',
+	  LDFLAGS => '-lm',
+	  LIBS => ' ' 
+	  . $BUILD_DIR . '/unix/botlib.a '
+	  . $BUILD_DIR . '/unix/asmlib.a'
+	);
+} else {
+	$env = new cons(
+		CC => $CC,
+		CXX => $CXX,
+		LINK => $LINK,
+	  # FIXME TTimo I'm not sure about what C_ONLY is for
+	  CFLAGS => $BASE_CFLAGS . '-DDEDICATED -DC_ONLY',
+	  LDFLAGS => '-ldl -lm',
+	  LIBS => ' ' 
+	  . $BUILD_DIR . '/unix/botlib.a '
+	  . $BUILD_DIR . '/unix/asmlib.a'
+	);
+}
 
 # list the files for the dedicated server
 @FILES = qw( 

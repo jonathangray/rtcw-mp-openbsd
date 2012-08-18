@@ -244,6 +244,8 @@ else
   $BASE_CFLAGS = $COMMON_CFLAGS . '-DNDEBUG -O6 -mcpu=pentiumpro -march=pentium -fomit-frame-pointer -ffast-math -malign-loops=2 -malign-jumps=2 -malign-functions=2 -fno-strict-aliasing -fstrength-reduce ';
 }
 
+$BASE_CFLAGS = $BASE_CFLAGS . ' -I/usr/X11R6/include ';
+
 # extract the wolf version from q_shared.h
 $line = `cat ../game/q_shared.h | grep Q3_VERSION`;
 chomp $line;
@@ -282,7 +284,7 @@ if ($do_light eq 0 && $do_update eq 0 && $do_mod eq 0)
 
   Link $BUILD_DIR => '..';
 
-  Export qw( BASE_CFLAGS CONFIG_DIR BUILD_DIR CC CXX LINK );
+  Export qw( BASE_CFLAGS CONFIG_DIR BUILD_DIR CC CXX LINK OS );
 
   Build $BUILD_DIR . '/unix/Conscript-client';
 }
@@ -292,7 +294,7 @@ $TARGET_DIR = 'dedicated';
 
 $BUILD_DIR = $CONFIG_DIR . '/' . $TARGET_DIR;
 
-Export qw( BASE_CFLAGS CONFIG_DIR BUILD_DIR DEDICATED_NAME CC CXX LINK );
+Export qw( BASE_CFLAGS CONFIG_DIR BUILD_DIR DEDICATED_NAME CC CXX LINK OS );
 
 Link $BUILD_DIR => '..';
 
@@ -309,7 +311,7 @@ if ($do_update eq 0)
 
   Link $BUILD_DIR => '..';
 
-  Export qw( BASE_CFLAGS CONFIG_DIR BUILD_DIR BASEGAME do_lddabort CC CXX LINK );
+  Export qw( BASE_CFLAGS CONFIG_DIR BUILD_DIR BASEGAME do_lddabort CC CXX LINK OS );
 
   Build $BUILD_DIR . '/unix/Conscript-game';
 	
@@ -325,7 +327,7 @@ if ($do_update eq 0)
 
     Link $BUILD_DIR => '../..';
 
-    Export qw( BASE_CFLAGS CONFIG_DIR BUILD_DIR BASEGAME do_lddabort CC CXX LINK );
+    Export qw( BASE_CFLAGS CONFIG_DIR BUILD_DIR BASEGAME do_lddabort CC CXX LINK OS );
 
     Build $BUILD_DIR . '/src/unix/Conscript-cgame';
 
@@ -336,7 +338,7 @@ if ($do_update eq 0)
 
     Link $BUILD_DIR => '../..';
 
-    Export qw( BASE_CFLAGS CONFIG_DIR BUILD_DIR BASEGAME do_lddabort CC CXX LINK );
+    Export qw( BASE_CFLAGS CONFIG_DIR BUILD_DIR BASEGAME do_lddabort CC CXX LINK OS );
 
     Build $BUILD_DIR . '/src/unix/Conscript-ui';
   }
@@ -348,7 +350,7 @@ if ($do_pk3 eq 1)
 {
 	$INSTALL_DIR = '';
 	$BUILD_DIR = $CONFIG_DIR;
-	Export qw( INSTALL_DIR BUILD_DIR CC CXX LINK );
+	Export qw( INSTALL_DIR BUILD_DIR CC CXX LINK OS );
 	Build "Conscript-pk3";
 }
 
@@ -362,7 +364,7 @@ if ($do_setup eq 1)
     exit;
   }
   Link $CONFIG_DIR => '.';
-  Export qw( CONFIG_DIR WOLF_VER BASEGAME do_demo do_light CC CXX LINK );
+  Export qw( CONFIG_DIR WOLF_VER BASEGAME do_demo do_light CC CXX LINK OS );
   Build $CONFIG_DIR . "/Conscript-setup";
 }
 #--------------------------------------------------

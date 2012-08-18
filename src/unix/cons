@@ -294,7 +294,7 @@ sub showcom {
 		'LD'             => 'ld',
 		'LDFLAGS'        => '',
 		'PREFLIB'        => 'lib',
-		'ENV'            => { 'PATH' => '/bin:/usr/bin' },
+		'ENV'            => { 'PATH' => '/bin:/usr/bin:/usr/local/bin' },
 		],
      );
 

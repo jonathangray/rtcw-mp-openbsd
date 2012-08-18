@@ -1,6 +1,6 @@
 # full client build script
 
-Import qw( BASE_CFLAGS CONFIG_DIR BUILD_DIR CC CXX LINK );
+Import qw( BASE_CFLAGS CONFIG_DIR BUILD_DIR CC CXX LINK OS );
 
 # splines
 $env_splines = new cons(
@@ -140,18 +140,33 @@ Library $env_inlined 'inlinelib', '../unix/matha.s', '../unix/snd_mixa.s';
 
 # putting it all together
 
-$env = new cons(
-	CC => $CC,
-	CXX => $CXX,
-	LINK => $LINK,
-  CFLAGS => $BASE_CFLAGS,
-  LIBS => ' ' . $BUILD_DIR . '/unix/splines.a ' 
-  . $BUILD_DIR . '/unix/botlib.a ' 
-  . $BUILD_DIR . '/unix/jpeglib.a '
-  . $BUILD_DIR . '/unix/asmlib.a '
-  . $BUILD_DIR . '/unix/inlinelib.a '
-  . '-L/usr/X11R6/lib -lX11 -lXext -lXxf86dga -lXxf86vm -ldl -lm'
-);
+if ($OS eq 'OpenBSD') {
+	$env = new cons(
+		CC => $CC,
+		CXX => $CXX,
+		LINK => $LINK,
+	  CFLAGS => $BASE_CFLAGS,
+	  LIBS => ' ' . $BUILD_DIR . '/unix/splines.a ' 
+	  . $BUILD_DIR . '/unix/botlib.a ' 
+	  . $BUILD_DIR . '/unix/jpeglib.a '
+	  . $BUILD_DIR . '/unix/asmlib.a '
+	  . $BUILD_DIR . '/unix/inlinelib.a '
+	  . '-L/usr/X11R6/lib -lX11 -lXext -lXxf86dga -lXxf86vm -lm -lossaudio'
+	);
+} else {
+	$env = new cons(
+		CC => $CC,
+		CXX => $CXX,
+		LINK => $LINK,
+	  CFLAGS => $BASE_CFLAGS,
+	  LIBS => ' ' . $BUILD_DIR . '/unix/splines.a ' 
+	  . $BUILD_DIR . '/unix/botlib.a ' 
+	  . $BUILD_DIR . '/unix/jpeglib.a '
+	  . $BUILD_DIR . '/unix/asmlib.a '
+	  . $BUILD_DIR . '/unix/inlinelib.a '
+	  . '-L/usr/X11R6/lib -lX11 -lXext -lXxf86dga -lXxf86vm -ldl -lm'
+	);
+}
 
 @RENDERER_FILES = qw(
   ../renderer/tr_animation.c   
@@ -222,17 +237,30 @@ $COMMON_REF = \@COMMON_FILES;
   );
 $SOUND_REF = \@SOUND_FILES;
 
-@UNIX_FILES = qw(
-  ../unix/unix_main.c 
-  ../unix/unix_net.c 
-  ../unix/unix_shared.c 
-  ../unix/linux_common.c
-  ../unix/linux_qgl.c   
-  ../unix/linux_glimp.c   
-  ../unix/linux_joystick.c  
-  ../unix/linux_snd.c
-	../unix/linux_signals.c
-  );
+if ($OS eq 'OpenBSD') {
+	@UNIX_FILES = qw(
+	  ../unix/unix_main.c 
+	  ../unix/unix_net.c 
+	  ../unix/unix_shared.c 
+	  ../unix/linux_common.c
+	  ../unix/linux_qgl.c   
+	  ../unix/linux_glimp.c   
+	  ../unix/linux_snd.c
+		../unix/linux_signals.c
+	  );
+} else {
+	@UNIX_FILES = qw(
+	  ../unix/unix_main.c 
+	  ../unix/unix_net.c 
+	  ../unix/unix_shared.c 
+	  ../unix/linux_common.c
+	  ../unix/linux_qgl.c   
+	  ../unix/linux_glimp.c   
+	  ../unix/linux_joystick.c  
+	  ../unix/linux_snd.c
+		../unix/linux_signals.c
+	  );
+}
 $UNIX_REF = \@UNIX_FILES;
 
 @SERVER_FILES = qw(

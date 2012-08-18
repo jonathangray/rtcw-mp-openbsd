@@ -1,15 +1,26 @@
 # ui
 
-Import qw( BASE_CFLAGS CONFIG_DIR BUILD_DIR BASEGAME do_lddabort CC CXX LINK );
+Import qw( BASE_CFLAGS CONFIG_DIR BUILD_DIR BASEGAME do_lddabort CC CXX LINK OS );
 
-$env = new cons(
-	CC => $CC,
-	CXX => $CXX,
-	LINK => $LINK,
-  CPPPATH => '#../game', # needed for ui_ files
-  CFLAGS => $BASE_CFLAGS . '-fPIC',
-  LDFLAGS => '-shared -ldl -lm'
-);
+if ($OS eq 'OpenBSD') {
+	$env = new cons(
+		CC => $CC,
+		CXX => $CXX,
+		LINK => $LINK,
+	  CPPPATH => '#../game', # needed for ui_ files
+	  CFLAGS => $BASE_CFLAGS . '-fPIC',
+	  LDFLAGS => '-shared -lm'
+	);
+} else {
+	$env = new cons(
+		CC => $CC,
+		CXX => $CXX,
+		LINK => $LINK,
+	  CPPPATH => '#../game', # needed for ui_ files
+	  CFLAGS => $BASE_CFLAGS . '-fPIC',
+	  LDFLAGS => '-shared -ldl -lm'
+	);
+}
 
 # some files are compiled and linked in to several .so
 # this confuses gdb when setting breakpoints

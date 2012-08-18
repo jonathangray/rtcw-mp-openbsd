@@ -1,16 +1,28 @@
 # game
 
-Import qw( BASE_CFLAGS CONFIG_DIR BUILD_DIR BASEGAME do_lddabort CC CXX LINK );
+Import qw( BASE_CFLAGS CONFIG_DIR BUILD_DIR BASEGAME do_lddabort CC CXX LINK OS );
 
-$env = new cons(
-	CC => $CC,
-	CXX => $CXX,
-	LINK => $LINK,
-  CPPPATH => '#../game:#../botai',
-  # NOTE TTimo what about the GAMEDLL define? where is it needed?
-  CFLAGS => $BASE_CFLAGS . '-fPIC -DGAMEDLL',
-  LDFLAGS => '-shared -ldl -lm'
-);
+if ($OS eq 'OpenBSD') {
+	$env = new cons(
+		CC => $CC,
+		CXX => $CXX,
+		LINK => $LINK,
+	  CPPPATH => '#../game:#../botai',
+	  # NOTE TTimo what about the GAMEDLL define? where is it needed?
+	  CFLAGS => $BASE_CFLAGS . '-fPIC -DGAMEDLL',
+	  LDFLAGS => '-shared -lm'
+	);
+} else {
+	$env = new cons(
+		CC => $CC,
+		CXX => $CXX,
+		LINK => $LINK,
+	  CPPPATH => '#../game:#../botai',
+	  # NOTE TTimo what about the GAMEDLL define? where is it needed?
+	  CFLAGS => $BASE_CFLAGS . '-fPIC -DGAMEDLL',
+	  LDFLAGS => '-shared -ldl -lm'
+	);
+}
 
 @FILES = qw( 
   ../game/ai_cast.c
