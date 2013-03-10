@@ -155,7 +155,7 @@ void DumpReplaceFunctions( void ) {
 	char path[_MAX_PATH];
 	FILE    *f;
 	int len, newlen;
-	unsigned char *buf, *newbuf;
+	unsigned char *buf, *newbuf = NULL;
 	int updated;
 
 	updated = 0;
@@ -184,7 +184,7 @@ void DumpReplaceFunctions( void ) {
 	fclose( f );
 
 	strcpy( path, func_filename );
-	if ( f = fopen( path, "rb" ) ) {
+	if ( ( f = fopen( path, "rb" ) ) != NULL ) {
 		fseek( f, 0, SEEK_END );
 		newlen = ftell( f );
 		newbuf = (unsigned char *) malloc( newlen + 1 );
@@ -243,7 +243,7 @@ void DumpReplaceFunctions( void ) {
 	fclose( f );
 
 	strcpy( path, func_filedesc );
-	if ( f = fopen( path, "rb" ) ) {
+	if ( ( f = fopen( path, "rb" ) ) != NULL ) {
 		fseek( f, 0, SEEK_END );
 		newlen = ftell( f );
 		newbuf = (unsigned char *) malloc( newlen + 1 );
@@ -648,6 +648,8 @@ int main( int argc, char *argv[] ) {
 		GetFunctionNamesFromFile( argv[i] );
 	}
 	DumpReplaceFunctions();
+
+	return (0);
 }
 
 #endif
