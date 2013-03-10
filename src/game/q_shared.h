@@ -105,6 +105,7 @@ If you have questions concerning this license or the applicable additional terms
 #include <time.h>
 #include <ctype.h>
 #include <limits.h>
+#include <stdint.h>
 
 #endif
 
@@ -286,6 +287,13 @@ static inline float idSqrt( float x ) {
 #define CPUSTRING   "openbsd-other"
 #endif
 
+#include <sys/endian.h>
+#if _BYTE_ORDER == _BIG_ENDIAN
+#define Q3_BIG_ENDIAN
+#else
+#define Q3_LITTLE_ENDIAN
+#endif
+
 #define PATH_SEP '/'
 
 #endif
@@ -297,10 +305,30 @@ typedef unsigned char byte;
 
 typedef enum {qfalse, qtrue}    qboolean;
 
+typedef union
+{
+	float f;
+	int i;
+	unsigned int ui;
+} floatint_t;
+
 typedef int qhandle_t;
 typedef int sfxHandle_t;
 typedef int fileHandle_t;
 typedef int clipHandle_t;
+
+#define PAD(base, alignment)	(((base) + (alignment) - 1) & ~((alignment) - 1))
+#define PADLEN(base, alignment)	(PAD((base), (alignment)) - (base))
+
+#define PADP(base, alignment)	((void *) PAD((intptr_t) (base), (alignment)))
+
+#ifndef ID_INLINE
+#ifdef _WIN32
+#define ID_INLINE __inline
+#else
+#define ID_INLINE inline
+#endif
+#endif
 
 //#define	SND_NORMAL			0x000	// (default) Allow sound to be cut off only by the same sound on this channel
 #define     SND_OKTOCUT         0x001   // Allow sound to be cut off by any following sounds on this channel
@@ -818,16 +846,24 @@ typedef struct
 
 //=============================================
 
-short   BigShort( short l );
-short   LittleShort( short l );
-int     BigLong( int l );
-int     LittleLong( int l );
-qint64  BigLong64( qint64 l );
-qint64  LittleLong64( qint64 l );
-float   BigFloat( float l );
-float   LittleFloat( float l );
+#ifdef Q3_BIG_ENDIAN
+#define LittleShort(x) ShortSwap(x)
+#define LittleLong(x) LongSwap(x)
+#define LittleFloat(x) FloatSwap(&x)
+#define BigShort
+#define BigLong
+#define BigFloat
+#else
+#define LittleShort
+#define LittleLong
+#define LittleFloat
+#define BigShort(x) ShortSwap(x)
+#define BigLong(x) LongSwap(x)
+#define BigFloat(x) FloatSwap(&x)
+#endif
 
-void    Swap_Init( void );
+#define Swap_Init()
+
 char    * QDECL va( char *format, ... );
 float   *tv( float x, float y, float z );
 

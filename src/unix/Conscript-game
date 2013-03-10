@@ -1,6 +1,6 @@
 # game
 
-Import qw( BASE_CFLAGS CONFIG_DIR BUILD_DIR BASEGAME do_lddabort CC CXX LINK OS );
+Import qw( BASE_CFLAGS CONFIG_DIR BUILD_DIR BASEGAME do_lddabort CC CXX LINK OS CPU );
 
 if ($OS eq 'OpenBSD') {
 	$env = new cons(
@@ -82,8 +82,9 @@ if ($OS eq 'OpenBSD') {
 $FILESREF = \@FILES;
 
 # NOTE: could use an ldd -r after .so build to catch unresolved symbols? (PostBuild command)
-Program $env 'qagame.mp.i386.so', @$FILESREF;
-my $path = FilePath('qagame.mp.i386.so');
-AfterBuild $env 'qagame.mp.i386.so', "[perl] &ldd_check::do_check(\'$path\', $do_lddabort)";
+my $qagame = 'qagame.mp.' . $CPU . '.so';
+Program $env $qagame, @$FILESREF;
+my $path = FilePath($qagame);
+AfterBuild $env $qagame, "[perl] &ldd_check::do_check(\'$path\', $do_lddabort)";
 
-Install $env '#' . $CONFIG_DIR . '/out/' . $BASEGAME, 'qagame.mp.i386.so';
+Install $env '#' . $CONFIG_DIR . '/out/' . $BASEGAME, $qagame;

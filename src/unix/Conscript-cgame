@@ -1,6 +1,6 @@
 # cgame
 
-Import qw( BASE_CFLAGS CONFIG_DIR BUILD_DIR BASEGAME do_lddabort CC CXX LINK OS );
+Import qw( BASE_CFLAGS CONFIG_DIR BUILD_DIR BASEGAME do_lddabort CC CXX LINK OS CPU );
 
 if ($OS eq 'OpenBSD') {
 	$env = new cons(
@@ -77,9 +77,9 @@ $CG_FILESREF = \@CG_FILES_OUT;
   );
 $FILESREF = \@FILES;
 
-# FIXME CPU string  
-Program $env 'cgame.mp.i386.so', @$FILESREF, @$CG_FILESREF;
-my $path = FilePath('cgame.mp.i386.so');
-AfterBuild $env 'cgame.mp.i386.so', "[perl] &ldd_check::do_check(\'$path\', $do_lddabort)";
+my $cgame = 'cgame.mp.' . $CPU . '.so';
+Program $env $cgame, @$FILESREF, @$CG_FILESREF;
+my $path = FilePath($cgame);
+AfterBuild $env $cgame, "[perl] &ldd_check::do_check(\'$path\', $do_lddabort)";
 
-Install $env '#' . $CONFIG_DIR . '/out/' . $BASEGAME, 'cgame.mp.i386.so';
+Install $env '#' . $CONFIG_DIR . '/out/' . $BASEGAME, $cgame;

@@ -31,12 +31,12 @@ If you have questions concerning this license or the applicable additional terms
 // this file is only included when building a dll
 // syscalls.asm is included instead when building a qvm
 
-static int ( QDECL * syscall )( int arg, ... ) = ( int ( QDECL * )( int, ... ) ) - 1;
+static intptr_t ( QDECL * syscall )( intptr_t arg, ... ) = ( intptr_t ( QDECL * )( intptr_t, ... ) ) - 1;
 
 #if defined( __MACOS__ )
 #pragma export on
 #endif
-void dllEntry( int ( QDECL *syscallptr )( int arg,... ) ) {
+void dllEntry( intptr_t ( QDECL *syscallptr )( intptr_t arg,... ) ) {
 	syscall = syscallptr;
 }
 #if defined( __MACOS__ )
@@ -44,9 +44,10 @@ void dllEntry( int ( QDECL *syscallptr )( int arg,... ) ) {
 #endif
 
 int PASSFLOAT( float x ) {
-	float floatTemp;
-	floatTemp = x;
-	return *(int *)&floatTemp;
+	floatint_t fi;
+
+	fi.f = x;
+	return fi.i;
 }
 
 void trap_Print( const char *string ) {
@@ -74,9 +75,10 @@ void trap_Cvar_Set( const char *var_name, const char *value ) {
 }
 
 float trap_Cvar_VariableValue( const char *var_name ) {
-	int temp;
-	temp = syscall( UI_CVAR_VARIABLEVALUE, var_name );
-	return ( *(float*)&temp );
+	floatint_t fi;
+
+	fi.i = syscall(UI_CVAR_VARIABLEVALUE, var_name);
+	return fi.f;
 }
 
 void trap_Cvar_VariableStringBuffer( const char *var_name, char *buffer, int bufsize ) {

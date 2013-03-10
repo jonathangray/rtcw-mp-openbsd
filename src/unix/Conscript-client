@@ -1,6 +1,6 @@
 # full client build script
 
-Import qw( BASE_CFLAGS CONFIG_DIR BUILD_DIR CC CXX LINK OS );
+Import qw( BASE_CFLAGS CONFIG_DIR BUILD_DIR CC CXX LINK OS CPU );
 
 # splines
 $env_splines = new cons(
@@ -121,23 +121,6 @@ $JPEGLIB_REF = \@JPEGLIB_FILES;
   
 Library $env_jpeglib 'jpeglib', @$JPEGLIB_REF;   
 
-# NOTE TTimo this requires patched cons version to work (see unix/cons)
-%nasm_hash = new cons()->copy(
-  CC => 'nasm',
-  CCCOM => '%CC -f elf -o %> %<'
-);
-$nasm_hash{SUFMAP}{'.nasm'} = 'build::command::cc';
-$nasm_env = new cons(%nasm_hash);
-
-Library $nasm_env 'asmlib', 'ftol.nasm', 'snapvector.nasm';
-
-# compiling files with inlined assembly
-$env_inlined = new cons(
-  CFLAGS => '-m32 -DELF -x assembler-with-cpp'
-  );
-
-Library $env_inlined 'inlinelib', '../unix/matha.s', '../unix/snd_mixa.s';
-
 # putting it all together
 
 if ($OS eq 'OpenBSD') {
@@ -149,9 +132,7 @@ if ($OS eq 'OpenBSD') {
 	  LIBS => ' ' . $BUILD_DIR . '/unix/splines.a ' 
 	  . $BUILD_DIR . '/unix/botlib.a ' 
 	  . $BUILD_DIR . '/unix/jpeglib.a '
-	  . $BUILD_DIR . '/unix/asmlib.a '
-	  . $BUILD_DIR . '/unix/inlinelib.a '
-	  . '-L/usr/X11R6/lib -lX11 -lXext -lXxf86dga -lXxf86vm -lm -lsndio'
+	  . '-L/usr/X11R6/lib -lX11 -lXext -lXxf86dga -lXxf86vm -lm -lsndio -lpthread'
 	);
 } else {
 	$env = new cons(
@@ -162,8 +143,6 @@ if ($OS eq 'OpenBSD') {
 	  LIBS => ' ' . $BUILD_DIR . '/unix/splines.a ' 
 	  . $BUILD_DIR . '/unix/botlib.a ' 
 	  . $BUILD_DIR . '/unix/jpeglib.a '
-	  . $BUILD_DIR . '/unix/asmlib.a '
-	  . $BUILD_DIR . '/unix/inlinelib.a '
 	  . '-L/usr/X11R6/lib -lX11 -lXext -lXxf86dga -lXxf86vm -ldl -lm'
 	);
 }
@@ -280,13 +259,11 @@ $SERVER_REF = \@SERVER_FILES;
 # anyway, qvm support is not planned in Wolf .. could get rid of it
 @VM_FILES = qw(
   ../qcommon/vm.c
-  ../qcommon/vm_x86.c
   ../qcommon/vm_interpreted.c
   );
 $VM_REF = \@VM_FILES;
 
-# FIXME: import the CPU string to build the name of the target
-Program $env 'wolf.x86', '../game/q_shared.c', '../game/q_math.c',
+Program $env 'wolf.' . $CPU, '../game/q_shared.c', '../game/q_math.c',
   @$RENDERER_REF, @$CLIENT_REF, @$COMMON_REF, @$SOUND_REF,
   @$UNIX_REF, @$SERVER_REF, @$VM_REF;
-Install $env '#' . $CONFIG_DIR . '/out', 'wolf.x86';
+Install $env '#' . $CONFIG_DIR . '/out', 'wolf.' . $CPU;

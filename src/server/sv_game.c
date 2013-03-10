@@ -296,11 +296,10 @@ void SV_GetUsercmd( int clientNum, usercmd_t *cmd ) {
 //==============================================
 
 static int  FloatAsInt( float f ) {
-	int temp;
+	floatint_t fi;
 
-	*(float *)&temp = f;
-
-	return temp;
+	fi.f = f;
+	return fi.i;
 }
 
 /*
@@ -311,15 +310,8 @@ The module is making a system call
 ====================
 */
 //rcg010207 - see my comments in VM_DllSyscall(), in qcommon/vm.c ...
-#if ( ( defined __linux__ ) && ( defined __powerpc__ ) ) || ( defined MACOS_X )
-#define VMA( x ) ( (void *) args[x] )
-#else
-#define VMA( x ) VM_ArgPtr( args[x] )
-#endif
 
-#define VMF( x )  ( (float *)args )[x]
-
-int SV_GameSystemCalls( int *args ) {
+intptr_t SV_GameSystemCalls( intptr_t *args ) {
 	switch ( args[0] ) {
 	case G_PRINT:
 		Com_Printf( "%s", VMA( 1 ) );
@@ -855,7 +847,7 @@ int SV_GameSystemCalls( int *args ) {
 		return 0;
 
 	case TRAP_STRNCPY:
-		return (int)strncpy( VMA( 1 ), VMA( 2 ), args[3] );
+		return (intptr_t)strncpy( VMA( 1 ), VMA( 2 ), args[3] );
 
 	case TRAP_SIN:
 		return FloatAsInt( sin( VMF( 1 ) ) );

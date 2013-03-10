@@ -1,6 +1,6 @@
 # ui
 
-Import qw( BASE_CFLAGS CONFIG_DIR BUILD_DIR BASEGAME do_lddabort CC CXX LINK OS );
+Import qw( BASE_CFLAGS CONFIG_DIR BUILD_DIR BASEGAME do_lddabort CC CXX LINK OS CPU );
 
 if ($OS eq 'OpenBSD') {
 	$env = new cons(
@@ -55,9 +55,8 @@ $UI_FILESREF = \@UI_FILES_OUT;
   );
 $FILESREF = \@FILES;
   
-# FIXME CPU string  
-Program $env 'ui.mp.i386.so', @$FILESREF, @$UI_FILESREF;
-my $path = FilePath('ui.mp.i386.so');
-AfterBuild $env 'ui.mp.i386.so', "[perl] &ldd_check::do_check(\'$path\', $do_lddabort)";
+Program $env 'ui.mp.' . $CPU . '.so', @$FILESREF, @$UI_FILESREF;
+my $path = FilePath('ui.mp.' . $CPU . '.so');
+AfterBuild $env 'ui.mp.' . $CPU . '.so', "[perl] &ldd_check::do_check(\'$path\', $do_lddabort)";
 
-Install $env '#' . $CONFIG_DIR . '/out/' . $BASEGAME, 'ui.mp.i386.so';
+Install $env '#' . $CONFIG_DIR . '/out/' . $BASEGAME, 'ui.mp.' . $CPU . '.so';

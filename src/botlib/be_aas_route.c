@@ -1008,11 +1008,13 @@ aas_routingcache_t *AAS_ReadCache( fileHandle_t fp ) {
 	cache->reachabilities = (unsigned char *) cache + sizeof( aas_routingcache_t ) +
 							( ( size - sizeof( aas_routingcache_t ) ) / 3 ) * 2;
 
+#if 0
 	//DAJ BUGFIX for missing byteswaps for traveltimes
 	size = ( size - sizeof( aas_routingcache_t ) ) / 3 + 1;
 	for ( i = 0; i < size; i++ ) {
 		cache->traveltimes[i] = LittleShort( cache->traveltimes[i] );
 	}
+#endif
 	return cache;
 } //end of the function AAS_ReadCache
 //===========================================================================
@@ -1975,7 +1977,7 @@ void AAS_DecompressVis( byte *in, int numareas, byte *decompressed ) {
 
 	//row = (numareas+7)>>3;
 	out = decompressed;
-	end = ( byte * )( (int)decompressed + numareas );
+	end = ( byte * )( (uintptr_t)decompressed + numareas );
 
 	do
 	{

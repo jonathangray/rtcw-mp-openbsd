@@ -1548,7 +1548,7 @@ void Com_InitHunkMemory( void ) {
 		Com_Error( ERR_FATAL, "Hunk data failed to allocate %i megs", s_hunkTotal / ( 1024 * 1024 ) );
 	}
 	// cacheline align
-	s_hunkData = ( byte * )( ( (int)s_hunkData + 31 ) & ~31 );
+	s_hunkData = ( byte * )( ( (intptr_t)s_hunkData + 31 ) & ~31 );
 	Hunk_Clear();
 
 	Cmd_AddCommand( "meminfo", Com_Meminfo_f );
@@ -1763,7 +1763,7 @@ void *Hunk_AllocateTempMemory( int size ) {
 
 	Hunk_SwapBanks();
 
-	size = ( ( size + 3 ) & ~3 ) + sizeof( hunkHeader_t );
+	size = PAD(size, sizeof(intptr_t)) + sizeof(hunkHeader_t);
 
 	if ( hunk_temp->temp + hunk_permanent->permanent + size > s_hunkTotal ) {
 		Com_Error( ERR_DROP, "Hunk_AllocateTempMemory: failed on %i", size );
