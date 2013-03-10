@@ -44,16 +44,6 @@ $BOTLIB_REF = \@BOTLIB_FILES;
 
 Library $env_botlib 'botlib', @$BOTLIB_REF;
 
-# NOTE TTimo this requires patched cons version to work (see unix/cons)
-%nasm_hash = new cons()->copy(
-  CC => 'nasm',
-  CCCOM => '%CC -f elf -o %> %<'
-);
-$nasm_hash{SUFMAP}{'.nasm'} = 'build::command::cc';
-$nasm_env = new cons(%nasm_hash);
-
-Library $nasm_env 'asmlib', 'ftol.nasm', 'snapvector.nasm';
-
 if ($OS eq 'OpenBSD') {
 	$env = new cons(
 		CC => $CC,
@@ -64,7 +54,6 @@ if ($OS eq 'OpenBSD') {
 	  LDFLAGS => '-lm',
 	  LIBS => ' ' 
 	  . $BUILD_DIR . '/unix/botlib.a '
-	  . $BUILD_DIR . '/unix/asmlib.a'
 	);
 } else {
 	$env = new cons(
@@ -76,7 +65,6 @@ if ($OS eq 'OpenBSD') {
 	  LDFLAGS => '-ldl -lm',
 	  LIBS => ' ' 
 	  . $BUILD_DIR . '/unix/botlib.a '
-	  . $BUILD_DIR . '/unix/asmlib.a'
 	);
 }
 
@@ -122,5 +110,5 @@ $FILESREF = \@FILES;
 
 # DEDICATED_NAME is imported, holds the name of the target
 # wolfded.x86 usually
-Program $env $DEDICATED_NAME, '../qcommon/vm_x86.c', @$FILESREF;
+Program $env $DEDICATED_NAME, @$FILESREF;
 Install $env '#' . $CONFIG_DIR . '/out', $DEDICATED_NAME;
