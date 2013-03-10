@@ -846,6 +846,15 @@ typedef struct
 
 //=============================================
 
+short ShortSwap( short l );
+short ShortNoSwap( short l );
+int LongSwap( int l );
+int LongNoSwap( int l );
+qint64 Long64Swap( qint64 ll );
+qint64 Long64NoSwap( qint64 ll );
+float FloatSwap( const float *f );
+float FloatNoSwap( const float *f );
+
 #ifdef Q3_BIG_ENDIAN
 #define LittleShort(x) ShortSwap(x)
 #define LittleLong(x) LongSwap(x)
