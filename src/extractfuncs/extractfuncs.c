@@ -152,7 +152,7 @@ static char *func_filedesc = "g_func_decs.h";
 
 void DumpReplaceFunctions( void ) {
 	replacefunc_t *rf;
-	char path[_MAX_PATH];
+	char path[PATH_MAX];
 	FILE    *f;
 	int len, newlen;
 	unsigned char *buf, *newbuf = NULL;
@@ -194,7 +194,7 @@ void DumpReplaceFunctions( void ) {
 		fclose( f );
 
 		if ( len != newlen || Q_stricmp( buf, newbuf ) ) {
-			char newpath[_MAX_PATH];
+			char newpath[PATH_MAX];
 
 			// delete the old file, rename the new one
 			strcpy( path, func_filename );
@@ -253,7 +253,7 @@ void DumpReplaceFunctions( void ) {
 		fclose( f );
 
 		if ( len != newlen || Q_stricmp( buf, newbuf ) ) {
-			char newpath[_MAX_PATH];
+			char newpath[PATH_MAX];
 
 			// delete the old file, rename the new one
 			strcpy( path, func_filedesc );
