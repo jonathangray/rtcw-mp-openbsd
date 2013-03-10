@@ -161,9 +161,9 @@ void DumpReplaceFunctions( void ) {
 	updated = 0;
 
 	// dump the function header
-	strcpy( path, "." );
-	strcat( path, PATHSEPERATOR_STR );
-	strcat( path, "g_funcs.tmp" );
+	strlcpy( path, ".", sizeof(path) );
+	strlcat( path, PATHSEPERATOR_STR, sizeof(path) );
+	strlcat( path, "g_funcs.tmp", sizeof(path) );
 	Log_Open( path );
 	for ( rf = replacefuncs; rf; rf = rf->next )
 	{
@@ -173,7 +173,7 @@ void DumpReplaceFunctions( void ) {
 	Log_Close();
 
 	// if it's different, rename the file over the real header
-	strcpy( path, "g_funcs.tmp" );
+	strlcpy( path, "g_funcs.tmp", sizeof(path) );
 	f = fopen( path, "rb" );
 	fseek( f, 0, SEEK_END );
 	len = ftell( f );
@@ -183,7 +183,7 @@ void DumpReplaceFunctions( void ) {
 	buf[len] = 0;
 	fclose( f );
 
-	strcpy( path, func_filename );
+	strlcpy( path, func_filename, sizeof(path) );
 	if ( ( f = fopen( path, "rb" ) ) != NULL ) {
 		fseek( f, 0, SEEK_END );
 		newlen = ftell( f );
@@ -197,10 +197,10 @@ void DumpReplaceFunctions( void ) {
 			char newpath[PATH_MAX];
 
 			// delete the old file, rename the new one
-			strcpy( path, func_filename );
+			strlcpy( path, func_filename, sizeof(path) );
 			remove( path );
 
-			strcpy( newpath, "g_funcs.tmp" );
+			strlcpy( newpath, "g_funcs.tmp", sizeof(newpath) );
 			rename( newpath, path );
 
 			// make g_save recompile itself
@@ -212,7 +212,7 @@ void DumpReplaceFunctions( void ) {
 			updated = 1;
 		} else {
 			// delete the old file
-			strcpy( path, "g_funcs.tmp" );
+			strlcpy( path, "g_funcs.tmp", sizeof(path) );
 			remove( path );
 		}
 	} else {
@@ -223,7 +223,7 @@ void DumpReplaceFunctions( void ) {
 	free( newbuf );
 
 	// dump the function declarations
-	strcpy( path, "g_func_decs.tmp" );
+	strlcpy( path, "g_func_decs.tmp", sizeof(path) );
 	Log_Open( path );
 	for ( rf = replacefuncs; rf; rf = rf->next )
 	{
@@ -232,7 +232,7 @@ void DumpReplaceFunctions( void ) {
 	Log_Close();
 
 	// if it's different, rename the file over the real header
-	strcpy( path, "g_func_decs.tmp" );
+	strlcpy( path, "g_func_decs.tmp", sizeof(path) );
 	f = fopen( path, "rb" );
 	fseek( f, 0, SEEK_END );
 	len = ftell( f );
@@ -242,7 +242,7 @@ void DumpReplaceFunctions( void ) {
 	buf[len] = 0;
 	fclose( f );
 
-	strcpy( path, func_filedesc );
+	strlcpy( path, func_filedesc, sizeof(path) );
 	if ( ( f = fopen( path, "rb" ) ) != NULL ) {
 		fseek( f, 0, SEEK_END );
 		newlen = ftell( f );
@@ -256,10 +256,10 @@ void DumpReplaceFunctions( void ) {
 			char newpath[PATH_MAX];
 
 			// delete the old file, rename the new one
-			strcpy( path, func_filedesc );
+			strlcpy( path, func_filedesc, sizeof(path) );
 			remove( path );
 
-			strcpy( newpath, "g_func_decs.tmp" );
+			strlcpy( newpath, "g_func_decs.tmp", sizeof(path) );
 			rename( newpath, path );
 
 			// make g_save recompile itself
@@ -272,7 +272,7 @@ void DumpReplaceFunctions( void ) {
 			updated = 1;
 		} else {
 			// delete the old file
-			strcpy( path, "g_func_decs.tmp" );
+			strlcpy( path, "g_func_decs.tmp", sizeof(path) );
 			remove( path );
 		}
 	} else {
